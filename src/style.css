@@ -456,6 +456,15 @@ select:focus {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  overflow-y: auto; /* 允许竖向滚动，防止小屏幕下保存按钮被遮挡 */
+}
+
+.btn-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: auto; /* 在高度富余时将按钮推至最底 */
+  padding-top: 0.5rem;
+  flex-shrink: 0; /* 防止按钮自身被压缩 */
 }
 
 .drawer-backdrop.active .drawer {

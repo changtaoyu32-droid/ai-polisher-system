@@ -163,7 +163,7 @@ function registerEvents() {
     elValTemp.textContent = e.target.value;
   });
   
-  elBtnSaveConfig.addEventListener("click", () => {
+  const saveConfig = () => {
     apiConfig = {
       endpoint: elApiEndpoint.value.trim(),
       apiKey: elApiKey.value.trim(),
@@ -173,6 +173,17 @@ function registerEvents() {
     localStorage.setItem("apiConfig", JSON.stringify(apiConfig));
     showToast("API 配置保存成功！");
     elApiDrawerBackdrop.classList.remove("active");
+  };
+
+  elBtnSaveConfig.addEventListener("click", saveConfig);
+
+  // 输入框内按回车键自动保存并确定
+  [elApiEndpoint, elApiKey, elApiModel].forEach(el => {
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        saveConfig();
+      }
+    });
   });
 
   elBtnClearConfig.addEventListener("click", () => {

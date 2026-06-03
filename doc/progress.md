@@ -52,3 +52,8 @@
   - **十三轮 Windows 一键启动机制开发与新手指南扩展**：
     - **开发 start.bat 批处理脚本**：编写并打包了 Windows 平台专属的 [start.bat](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/start.bat) 脚本，实现了运行环境自动检测、Node.js 缺失拦截提示、依赖库自动安装（配合国内镜像源加速）以及本地服务器拉起并自动打开默认浏览器的一键式启动。
     - **完善 README.md 本地启动说明**：在中英文说明书中引入了极简的“Windows 双击一键启动”与“命令行手动启动”双轨新手教程。
+  - **十四轮 API 配置抽屉可见性与交互体验优化（解决 API 配置失效问题）**：
+    - **修复抽屉高度溢出裁剪缺陷**：在 [src/style.css](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/src/style.css) 中为 `.drawer` 样式类添加了 `overflow-y: auto` 滚动支持，防止在窗口高度较矮的屏幕上底部“确定/重置”按钮因溢出而被裁剪隐藏。
+    - **重构按钮与布局样式**：在 style.css 中补全了缺失的 `.btn-row` 布局类定义，利用 Flexbox 进行左右排版，支持在垂直空间充足时将按钮自动置底，并在按钮元素上设置了防止高度挤压的 `flex-shrink: 0`。
+    - **修正确定按钮文案**：在 [index.html](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/index.html) 中将“保存”按钮文案修改为更符合中文习惯的“确定”按钮，消除用户“为什么没有确定按钮”的困惑。
+    - **添加回车键快速保存**：在 [src/main.js](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/src/main.js) 中为 Endpoint、ApiKey 及 Model 输入框绑定了 `Enter` 回车键事件监听，支持回车直接保存并生效配置。
