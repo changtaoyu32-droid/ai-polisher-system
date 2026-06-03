@@ -49,11 +49,13 @@ const elToast = document.getElementById("toast-notify");
 // 状态变量
 let currentTheme = localStorage.getItem("theme") || "dark";
 let apiConfig = JSON.parse(localStorage.getItem("apiConfig")) || {
-  endpoint: "https://api.deepseek.com/v1",
+  endpoint: "https://api.deepseek.com",
   apiKey: "",
-  model: "deepseek-chat",
+  model: "deepseek-v4-flash",
   temperature: 0.6
 };
+
+
 let isConverting = false;
 let currentViewMode = "normal"; // normal | diff
 let convertedResult = ""; // 存放最新降重得到的纯文本
