@@ -11,6 +11,7 @@ const elBtnApiConfig = document.getElementById("btn-api-config");
 const elApiDrawerBackdrop = document.getElementById("api-drawer-backdrop");
 const elBtnCloseDrawer = document.getElementById("btn-close-drawer");
 
+const elApiProvider = document.getElementById("api-provider");
 const elApiEndpoint = document.getElementById("api-endpoint");
 const elApiKey = document.getElementById("api-key");
 const elApiModel = document.getElementById("api-model");
@@ -49,9 +50,10 @@ const elToast = document.getElementById("toast-notify");
 // 状态变量
 let currentTheme = localStorage.getItem("theme") || "dark";
 let apiConfig = JSON.parse(localStorage.getItem("apiConfig")) || {
+  provider: "deepseek",
   endpoint: "https://api.deepseek.com",
   apiKey: "",
-  model: "deepseek-v4-flash",
+  model: "deepseek-chat",
   temperature: 0.6
 };
 
@@ -70,11 +72,22 @@ function init() {
   renderRoleOptions();
 
   // C. 回显 API 配置
+  const activeProvider = apiConfig.provider || (apiConfig.endpoint.includes("openai") ? "openai" : "deepseek");
+  elApiProvider.value = activeProvider;
   elApiEndpoint.value = apiConfig.endpoint;
   elApiKey.value = apiConfig.apiKey;
   elApiModel.value = apiConfig.model;
   elApiTemp.value = apiConfig.temperature;
   elValTemp.textContent = apiConfig.temperature;
+
+  // 根据当前服务商设置只读状态
+  if (activeProvider === "custom") {
+    elApiEndpoint.readOnly = false;
+    elApiModel.readOnly = false;
+  } else {
+    elApiEndpoint.readOnly = true;
+    elApiModel.readOnly = true;
+  }
 
   // D. 注册 DOM 事件监听
   registerEvents();
@@ -163,8 +176,31 @@ function registerEvents() {
     elValTemp.textContent = e.target.value;
   });
   
+  // 当 API 服务商切换时，自动填充并切换输入框读写状态
+  elApiProvider.addEventListener("change", (e) => {
+    const val = e.target.value;
+    if (val === "deepseek") {
+      elApiEndpoint.value = "https://api.deepseek.com";
+      elApiModel.value = "deepseek-chat";
+      elApiEndpoint.readOnly = true;
+      elApiModel.readOnly = true;
+    } else if (val === "openai") {
+      elApiEndpoint.value = "https://api.openai.com/v1";
+      elApiModel.value = "gpt-4o-mini";
+      elApiEndpoint.readOnly = true;
+      elApiModel.readOnly = true;
+    } else { // custom
+      elApiEndpoint.value = "";
+      elApiModel.value = "";
+      elApiEndpoint.readOnly = false;
+      elApiModel.readOnly = false;
+      elApiEndpoint.focus();
+    }
+  });
+
   const saveConfig = () => {
     apiConfig = {
+      provider: elApiProvider.value,
       endpoint: elApiEndpoint.value.trim(),
       apiKey: elApiKey.value.trim(),
       model: elApiModel.value.trim(),
@@ -187,19 +223,23 @@ function registerEvents() {
   });
 
   elBtnClearConfig.addEventListener("click", () => {
-    elApiEndpoint.value = "https://api.openai.com/v1";
+    elApiProvider.value = "deepseek";
+    elApiEndpoint.value = "https://api.deepseek.com";
     elApiKey.value = "";
-    elApiModel.value = "gpt-3.5-turbo";
+    elApiModel.value = "deepseek-chat";
     elApiTemp.value = 0.6;
     elValTemp.textContent = "0.6";
+    elApiEndpoint.readOnly = true;
+    elApiModel.readOnly = true;
     apiConfig = {
-      endpoint: "https://api.openai.com/v1",
+      provider: "deepseek",
+      endpoint: "https://api.deepseek.com",
       apiKey: "",
-      model: "gpt-3.5-turbo",
+      model: "deepseek-chat",
       temperature: 0.6
     };
     localStorage.removeItem("apiConfig");
-    showToast("配置已清空并恢复默认");
+    showToast("配置已清空并恢复默认（DeepSeek）");
   });
 
   // 5. 原文操作与字数检测

@@ -57,3 +57,7 @@
     - **重构按钮与布局样式**：在 style.css 中补全了缺失的 `.btn-row` 布局类定义，利用 Flexbox 进行左右排版，支持在垂直空间充足时将按钮自动置底，并在按钮元素上设置了防止高度挤压的 `flex-shrink: 0`。
     - **修正确定按钮文案**：在 [index.html](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/index.html) 中将“保存”按钮文案修改为更符合中文习惯的“确定”按钮，消除用户“为什么没有确定按钮”的困惑。
     - **添加回车键快速保存**：在 [src/main.js](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/src/main.js) 中为 Endpoint、ApiKey 及 Model 输入框绑定了 `Enter` 回车键事件监听，支持回车直接保存并生效配置。
+  - **十五轮 API 服务商预设切换器与输入框样式优化**：
+    - **新增 API 服务商下拉选择框**：在 [index.html](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/index.html) 配置抽屉顶部，加入了“API 服务商”预设选择菜单，提供 DeepSeek（默认选中）、OpenAI 和自定义三个选项。
+    - **实现端点与模型联动和只读保护**：在 [src/main.js](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/src/main.js) 中，当用户选择预设服务商时自动填充对应的 Base URL 与 Model。对于 DeepSeek 填充 `https://api.deepseek.com` 和 `deepseek-chat`；对于 OpenAI 填充 `https://api.openai.com/v1` 和 `gpt-4o-mini`。同时，为非“自定义”预设选项自动锁定输入框（`readOnly = true`）防止用户输错，选择“自定义”时则解锁编辑。
+    - **输入框交互与明亮模式视觉调优**：在 [src/style.css](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/src/style.css) 中提高了明亮主题下的输入框边框对比度，避免输入框背景像禁用样式；为只读（`readonly`）文本框设计了低透明度与禁用鼠标的视觉区分；并在 `main.js` 的重置逻辑中将其默认复位为 DeepSeek。
