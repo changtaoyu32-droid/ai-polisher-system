@@ -61,3 +61,8 @@
     - **新增 API 服务商下拉选择框**：在 [index.html](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/index.html) 配置抽屉顶部，加入了“API 服务商”预设选择菜单，提供 DeepSeek（默认选中）、OpenAI 和自定义三个选项。
     - **实现端点与模型联动和只读保护**：在 [src/main.js](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/src/main.js) 中，当用户选择预设服务商时自动填充对应的 Base URL 与 Model。对于 DeepSeek 填充 `https://api.deepseek.com` 和 `deepseek-chat`；对于 OpenAI 填充 `https://api.openai.com/v1` 和 `gpt-4o-mini`。同时，为非“自定义”预设选项自动锁定输入框（`readOnly = true`）防止用户输错，选择“自定义”时则解锁编辑。
     - **输入框交互与明亮模式视觉调优**：在 [src/style.css](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/src/style.css) 中提高了明亮主题下的输入框边框对比度，避免输入框背景像禁用样式；为只读（`readonly`）文本框设计了低透明度与禁用鼠标的视觉区分；并在 `main.js` 的重置逻辑中将其默认复位为 DeepSeek。
+  - **十六轮 本地离线引擎句式转换深度升级与最新模型推荐集成**：
+    - **打破本地离线引擎的字词级局限**：在 [src/engine.js](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/src/engine.js) 中为本地离线降重引擎增加了五大核心学术句式重组变换算法（因果句式颠倒、条件句式重组、转折句式精细化、递进句式深度化、目的/手段句式改写），在句子结构级别打破 AI 写作的刻板印象（如将“因为A，所以B”自动随机改写为“之所以B，其深层缘由主要在于A”等），极大提升了本地离线的降AI去重效果。
+    - **修复基于替换的省略号 Bug**：在 [src/config.js](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/src/config.js) 中修复了 `基于` 匹配导致替换结果中含有字面量省略号 `...` 的严重语意缺陷，优化为捕获组动态映射句式。
+    - **彻底开放输入框编辑权限**：在 [src/main.js](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/src/main.js) 中移除所有输入框的 `readOnly` 只读限制，使得用户在选择 API 服务商时依然拥有完全可写权限。
+    - **动态集成 2026 最新模型推荐标签**：在配置抽屉的模型名称（Model）输入框下方，加入了最新大模型的快速填充按钮。支持一键切换最新旗舰（DeepSeek-V4-Pro / GPT-5.5）、极速（DeepSeek-V4-Flash / GPT-5.4-mini）和常用老版本模型，配合自定义提供快速标签，大幅简化了最新模型的配置流程。

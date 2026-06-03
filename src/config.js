@@ -250,7 +250,7 @@ export const LOCAL_REPLACEMENTS = [
   { pattern: /访问/g, replacements: ["进行访问", "开展访问操作", "去接入"] },
 
   // 2. 特定动词/介词/连词替换
-  { pattern: /基于/g, replacements: ["基于...来开展", "凭借", "依托", "选用...作为基准"] }, 
+  { pattern: /基于([^，。；！？\s]+)/g, replacements: ["以$1为核心基准", "凭借$1", "依托于$1", "在结合了$1的基础之上"] }, 
   { pattern: /利用/g, replacements: ["借助", "凭借", "选用"] },
   { pattern: /通过/g, replacements: ["依靠", "凭借", "借助"] },
   { pattern: /使用|采用/g, replacements: ["运用", "选用", "合理采纳"] },

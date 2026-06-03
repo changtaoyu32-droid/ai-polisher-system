@@ -15,6 +15,7 @@ const elApiProvider = document.getElementById("api-provider");
 const elApiEndpoint = document.getElementById("api-endpoint");
 const elApiKey = document.getElementById("api-key");
 const elApiModel = document.getElementById("api-model");
+const elModelRecommendations = document.getElementById("model-recommendations");
 const elApiTemp = document.getElementById("api-temp");
 const elValTemp = document.getElementById("val-temp");
 const elBtnSaveConfig = document.getElementById("btn-save-config");
@@ -53,7 +54,7 @@ let apiConfig = JSON.parse(localStorage.getItem("apiConfig")) || {
   provider: "deepseek",
   endpoint: "https://api.deepseek.com",
   apiKey: "",
-  model: "deepseek-chat",
+  model: "deepseek-v4-pro",
   temperature: 0.6
 };
 
@@ -62,6 +63,46 @@ let isConverting = false;
 let currentViewMode = "normal"; // normal | diff
 let convertedResult = ""; // 存放最新降重得到的纯文本
 let selectedRoleId = SYSTEM_ROLES[0].id; // 默认选中第一个角色
+
+// 最新模型推荐数据预设 (2026年最新)
+const MODEL_RECOMMENDATIONS = {
+  deepseek: [
+    { name: "deepseek-v4-pro", desc: "旗舰" },
+    { name: "deepseek-v4-flash", desc: "极速" },
+    { name: "deepseek-chat", desc: "V3旧版" }
+  ],
+  openai: [
+    { name: "gpt-5.5", desc: "旗舰" },
+    { name: "gpt-5.4-mini", desc: "极速" },
+    { name: "gpt-4o-mini", desc: "常用" }
+  ],
+  custom: [
+    { name: "claude-3-5-sonnet", desc: "Claude" },
+    { name: "gemini-1.5-pro", desc: "Gemini" }
+  ]
+};
+
+// 动态渲染模型推荐标签
+function renderModelRecommendations(provider) {
+  const models = MODEL_RECOMMENDATIONS[provider] || MODEL_RECOMMENDATIONS.deepseek;
+  elModelRecommendations.innerHTML = models.map(m => `
+    <span class="model-tag-item" data-model="${m.name}">
+      ${m.name} <small style="opacity: 0.7; font-size: 0.65rem;">(${m.desc})</small>
+    </span>
+  `).join("");
+
+  // 绑定点击事件
+  elModelRecommendations.querySelectorAll(".model-tag-item").forEach(tag => {
+    tag.addEventListener("click", () => {
+      elApiModel.value = tag.getAttribute("data-model");
+      // 激活点击高亮效果
+      elModelRecommendations.querySelectorAll(".model-tag-item").forEach(t => {
+        t.classList.remove("active");
+      });
+      tag.classList.add("active");
+    });
+  });
+}
 
 // 初始化页面
 function init() {
@@ -80,14 +121,8 @@ function init() {
   elApiTemp.value = apiConfig.temperature;
   elValTemp.textContent = apiConfig.temperature;
 
-  // 根据当前服务商设置只读状态
-  if (activeProvider === "custom") {
-    elApiEndpoint.readOnly = false;
-    elApiModel.readOnly = false;
-  } else {
-    elApiEndpoint.readOnly = true;
-    elApiModel.readOnly = true;
-  }
+  // 渲染模型推荐列表（输入框保持完全可读写，不加 readOnly 锁）
+  renderModelRecommendations(activeProvider);
 
   // D. 注册 DOM 事件监听
   registerEvents();
@@ -176,26 +211,22 @@ function registerEvents() {
     elValTemp.textContent = e.target.value;
   });
   
-  // 当 API 服务商切换时，自动填充并切换输入框读写状态
+  // 当 API 服务商切换时，自动填充并更新推荐模型（所有框均保持完全可编辑）
   elApiProvider.addEventListener("change", (e) => {
     const val = e.target.value;
     if (val === "deepseek") {
       elApiEndpoint.value = "https://api.deepseek.com";
-      elApiModel.value = "deepseek-chat";
-      elApiEndpoint.readOnly = true;
-      elApiModel.readOnly = true;
+      elApiModel.value = "deepseek-v4-pro";
     } else if (val === "openai") {
       elApiEndpoint.value = "https://api.openai.com/v1";
-      elApiModel.value = "gpt-4o-mini";
-      elApiEndpoint.readOnly = true;
-      elApiModel.readOnly = true;
+      elApiModel.value = "gpt-5.5";
     } else { // custom
       elApiEndpoint.value = "";
       elApiModel.value = "";
-      elApiEndpoint.readOnly = false;
-      elApiModel.readOnly = false;
       elApiEndpoint.focus();
     }
+    // 动态渲染对应商户的推荐模型列表
+    renderModelRecommendations(val);
   });
 
   const saveConfig = () => {
@@ -226,19 +257,18 @@ function registerEvents() {
     elApiProvider.value = "deepseek";
     elApiEndpoint.value = "https://api.deepseek.com";
     elApiKey.value = "";
-    elApiModel.value = "deepseek-chat";
+    elApiModel.value = "deepseek-v4-pro";
     elApiTemp.value = 0.6;
     elValTemp.textContent = "0.6";
-    elApiEndpoint.readOnly = true;
-    elApiModel.readOnly = true;
     apiConfig = {
       provider: "deepseek",
       endpoint: "https://api.deepseek.com",
       apiKey: "",
-      model: "deepseek-chat",
+      model: "deepseek-v4-pro",
       temperature: 0.6
     };
     localStorage.removeItem("apiConfig");
+    renderModelRecommendations("deepseek");
     showToast("配置已清空并恢复默认（DeepSeek）");
   });
 

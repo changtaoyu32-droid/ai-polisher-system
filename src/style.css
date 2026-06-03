@@ -756,3 +756,35 @@ input[type="range"] {
   background: rgba(59, 130, 246, 0.03);
 }
 
+/* 推荐模型标签样式 */
+.model-tag-item {
+  display: inline-block;
+  background: var(--btn-secondary-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.model-tag-item:hover {
+  border-color: var(--text-muted) !important;
+  color: var(--text-main) !important;
+  background: var(--btn-secondary-hover) !important;
+  transform: translateY(-0.5px);
+}
+
+.model-tag-item.active {
+  border-color: var(--border-color-active) !important;
+  color: var(--border-color-active) !important;
+  background: rgba(59, 130, 246, 0.05) !important;
+  font-weight: 600;
+}
+
+[data-theme="light"] .model-tag-item.active {
+  background: rgba(37, 99, 235, 0.04) !important;
+}
+

@@ -116,8 +116,63 @@ export function localRewrite(text) {
   if (!text) return "";
   let result = text;
 
-  // A. 条件句式转换: "若..., 则..." 替换为 "如果..., 就..."
-  result = result.replace(/若([^，。]+)，则([^，。]+)/g, "如果$1，就$2");
+  // A.1 因果句式变换："因为A，所以B" -> "之所以B，其深层缘由主要在于A"
+  result = result.replace(/因为([^，。；！？\s]+)，所以([^，。；！？\s]+)/g, (...args) => {
+    const templates = [
+      "之所以$2，其深层缘由主要在于$1",
+      "鉴于$1，因而$2",
+      "$2的产生，与$1这一因果链条密不可分"
+    ];
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    return template.replace(/\$1/g, args[1]).replace(/\$2/g, args[2]);
+  });
+
+  // A.2 条件句式重组："如果A，就B" -> "在满足A的前提下，便会B"
+  result = result.replace(/如果([^，。；！？\s]+)，就([^，。；！？\s]+)/g, (...args) => {
+    const templates = [
+      "在满足$1的前提下，便会$2",
+      "一旦$1，则势必会$2",
+      "要是真正实现了$1，那么就能够完成$2"
+    ];
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    return template.replace(/\$1/g, args[1]).replace(/\$2/g, args[2]);
+  });
+
+  // A.3 转折句式精细化："虽然A，但是B" -> "尽管A，然而B"
+  result = result.replace(/(?:虽然|尽管)([^，。；！？\s]+)，(?:但是|但|然而)([^，。；！？\s]+)/g, (...args) => {
+    const templates = [
+      "尽管$1，然而$2",
+      "虽说$1，在此基础上却也$2",
+      "固然在$1的同时，但也必须注意到$2"
+    ];
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    return template.replace(/\$1/g, args[1]).replace(/\$2/g, args[2]);
+  });
+
+  // A.4 递进句式深度化："不仅A，而且B" -> "非但A，更在B的维度上起到了促进作用"
+  result = result.replace(/(?:不仅|非但)([^，。；！？\s]+)，(?:而且|并且|还)([^，。；！？\s]+)/g, (...args) => {
+    const templates = [
+      "非但$1，更在$2的维度上得以深层次显现",
+      "在实现$1的同时，更进一步促进了$2",
+      "不仅在$1的层面上有所突破，协同其相关的$2也得到了优化"
+    ];
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    return template.replace(/\$1/g, args[1]).replace(/\$2/g, args[2]);
+  });
+
+  // A.5 目的/手段句式："通过A，我们能够B" -> "凭借A，使得B得以顺利实现"
+  result = result.replace(/通过([^，。；！？\s]+)，(?:我们|系统)?(?:能够|可以|来)([^，。；！？\s]+)/g, (...args) => {
+    const templates = [
+      "凭借着$1，使得$2这一目标得以顺利完成",
+      "在借助$1的背景下，能够极大地便利$2",
+      "依靠$1的支撑，从而为$2打下了坚实基础"
+    ];
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    return template.replace(/\$1/g, args[1]).replace(/\$2/g, args[2]);
+  });
+
+  // A.6 基础条件句式转换: "若..., 则..." 替换为 "如果..., 就..."
+  result = result.replace(/若([^，。；！？\s]+)，则([^，。；！？\s]+)/g, "如果$1，就$2");
 
   // B. 解耦与动词结构优化: "为了将...解耦" 替换为 "为了实现...的解耦"
   result = result.replace(/为了将([^，。]+)解耦/g, "为了实现$1的解耦");
