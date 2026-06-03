@@ -46,3 +46,6 @@
   - **十一轮远程 Git 仓库对接与成功推送**：
     - **绑定 GitHub 远程仓库**：成功将本地 Git 仓库与重命名后的 GitHub 远程仓库 `https://github.com/changtaoyu32-droid/ai-polisher-system.git` 进行绑定。
     - **推送上传代码**：配置分支追踪，并成功执行 `git push -u origin main`，将包含核心降重算法、苹果极简界面、中英文 README 和测试词典在内的全部文件完整同步上传至 GitHub 云端仓库。
+  - **十二轮真实预览截图配置与 README 迭代**：
+    - **重命名截图资源**：将项目目录下原始截图（Snipaste）复制并命名为规范文件名 `preview-light.png` 与 `preview-dark.png`。
+    - **更新 README.md 展示**：移除原有的截图提示占位符，在中英文双语版本的 README 中新增明暗双主题并排展示的 Markdown 表格，以增强项目仓库的专业美观度。
