@@ -38,18 +38,26 @@
 
 ### 🚀 本地快速启动
 
-1. **克隆项目**
+> 💡 **Node.js 依赖说明：** 运行本系统电脑需预先安装 [Node.js](https://nodejs.org/)（推荐 LTS 版本，安装后请重启电脑使环境变量生效）。
+
+#### 🔹 方式一：Windows 双击一键启动（最推荐，简单省心）
+1. 双击项目根目录下的 **`start.bat`** 批处理文件。
+2. 脚本将自动检查您的运行环境、自动安装所需依赖（网络慢时会自动切换至国内镜像源），并自动在浏览器中打开：👉 **`http://localhost:5173/`** 开始使用。
+
+#### 🔹 方式二：命令行手动启动
+1. **定位并进入项目根目录**
    ```bash
-   git clone <本仓库地址>
    cd 论文降低ai小助手
    ```
-2. **安装依赖并运行**
-   确保您的电脑上已经安装了 Node.js。
+2. **安装依赖**
    ```bash
    npm install
+   ```
+3. **启动开发服务**
+   ```bash
    npm run dev
    ```
-   启动成功后，在浏览器中打开：👉 **`http://localhost:5173/`**
+4. **访问页面**：在浏览器中手动打开 👉 **`http://localhost:5173/`**。
 
 ### ⚙️ 大模型云端 API 配置
 
@@ -95,17 +103,26 @@ This platform is a **precision text polishing and de-AI tool** specifically desi
 
 ### 🚀 Quick Start
 
-1. **Clone project**
+> 💡 **Prerequisite:** Make sure you have [Node.js](https://nodejs.org/) installed on your computer.
+
+#### 🔹 Method 1: Windows One-click Script (Recommended)
+1. Double-click the **`start.bat`** file in the root directory.
+2. The script will automatically check your environment, install dependencies, and launch the system in your default browser at 👉 **`http://localhost:5173/`**.
+
+#### 🔹 Method 2: Manual Terminal Commands
+1. **Navigate to the project folder**
    ```bash
-   git clone <repo-url>
    cd 论文降低ai小助手
    ```
-2. **Install and run**
+2. **Install dependencies**
    ```bash
    npm install
+   ```
+3. **Start local dev server**
+   ```bash
    npm run dev
    ```
-   Open browser: 👉 **`http://localhost:5173/`**
+4. **Access UI**：Open your browser and navigate to 👉 **`http://localhost:5173/`**.
 
 ### ⚙️ DeepSeek API Configurations
 

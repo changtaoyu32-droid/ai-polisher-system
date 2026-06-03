@@ -49,3 +49,6 @@
   - **十二轮真实预览截图配置与 README 迭代**：
     - **重命名截图资源**：将项目目录下原始截图（Snipaste）复制并命名为规范文件名 `preview-light.png` 与 `preview-dark.png`。
     - **更新 README.md 展示**：移除原有的截图提示占位符，在中英文双语版本的 README 中新增明暗双主题并排展示的 Markdown 表格，以增强项目仓库的专业美观度。
+  - **十三轮 Windows 一键启动机制开发与新手指南扩展**：
+    - **开发 start.bat 批处理脚本**：编写并打包了 Windows 平台专属的 [start.bat](file:///c:/Users/19091/OneDrive/Desktop/论文降低ai小助手/start.bat) 脚本，实现了运行环境自动检测、Node.js 缺失拦截提示、依赖库自动安装（配合国内镜像源加速）以及本地服务器拉起并自动打开默认浏览器的一键式启动。
+    - **完善 README.md 本地启动说明**：在中英文说明书中引入了极简的“Windows 双击一键启动”与“命令行手动启动”双轨新手教程。
