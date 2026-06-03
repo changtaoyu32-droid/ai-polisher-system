@@ -12,6 +12,8 @@ const elApiDrawerBackdrop = document.getElementById("api-drawer-backdrop");
 const elBtnCloseDrawer = document.getElementById("btn-close-drawer");
 
 const elApiProvider = document.getElementById("api-provider");
+const elBtnProviderTip = document.getElementById("btn-provider-tip");
+const elProviderHelperPanel = document.getElementById("provider-helper-panel");
 const elApiEndpoint = document.getElementById("api-endpoint");
 const elApiKey = document.getElementById("api-key");
 const elApiModel = document.getElementById("api-model");
@@ -64,22 +66,53 @@ let currentViewMode = "normal"; // normal | diff
 let convertedResult = ""; // 存放最新降重得到的纯文本
 let selectedRoleId = SYSTEM_ROLES[0].id; // 默认选中第一个角色
 
-// 最新模型推荐数据预设 (2026年最新)
+// 最新模型推荐数据预设 (2026年最新，联网检索结果)
 const MODEL_RECOMMENDATIONS = {
   deepseek: [
     { name: "deepseek-v4-pro", desc: "旗舰" },
     { name: "deepseek-v4-flash", desc: "极速" },
-    { name: "deepseek-chat", desc: "V3旧版" }
+    { name: "deepseek-chat", desc: "V3兼容" }
   ],
   openai: [
     { name: "gpt-5.5", desc: "旗舰" },
     { name: "gpt-5.4-mini", desc: "极速" },
     { name: "gpt-4o-mini", desc: "常用" }
   ],
+  qwen: [
+    { name: "qwen-plus", desc: "旗舰" },
+    { name: "qwen-turbo", desc: "极速" },
+    { name: "qwen-long", desc: "长文本" }
+  ],
+  zhipu: [
+    { name: "glm-4-plus", desc: "旗舰" },
+    { name: "glm-4-flash", desc: "极速" },
+    { name: "glm-4-long", desc: "长文本" }
+  ],
+  kimi: [
+    { name: "moonshot-v1-128k", desc: "128K长文" },
+    { name: "moonshot-v1-32k", desc: "32K标准" },
+    { name: "moonshot-v1-8k", desc: "8K极速" }
+  ],
+  siliconflow: [
+    { name: "deepseek-ai/DeepSeek-V3", desc: "DS-V3" },
+    { name: "Qwen/Qwen2.5-72B-Instruct", desc: "千问72B" },
+    { name: "THUDM/glm-4-9b-chat", desc: "GLM-9B" }
+  ],
   custom: [
     { name: "claude-3-5-sonnet", desc: "Claude" },
-    { name: "gemini-1.5-pro", desc: "Gemini" }
+    { name: "gemini-2.0-flash", desc: "Gemini" }
   ]
+};
+
+// 服务商 -> 默认端点与默认模型映射
+const PROVIDER_DEFAULTS = {
+  deepseek:    { endpoint: "https://api.deepseek.com",                             model: "deepseek-v4-pro" },
+  openai:      { endpoint: "https://api.openai.com/v1",                            model: "gpt-5.5" },
+  qwen:        { endpoint: "https://dashscope.aliyuncs.com/compatible-mode/v1",    model: "qwen-plus" },
+  zhipu:       { endpoint: "https://open.bigmodel.cn/api/paas/v4",                 model: "glm-4-plus" },
+  kimi:        { endpoint: "https://api.moonshot.cn/v1",                            model: "moonshot-v1-128k" },
+  siliconflow: { endpoint: "https://api.siliconflow.cn/v1",                         model: "deepseek-ai/DeepSeek-V3" },
+  custom:      { endpoint: "",                                                      model: "" }
 };
 
 // 动态渲染模型推荐标签
@@ -211,21 +244,23 @@ function registerEvents() {
     elValTemp.textContent = e.target.value;
   });
   
+  // 配置说明提示按钮切换
+  elBtnProviderTip.addEventListener("click", () => {
+    const panel = elProviderHelperPanel;
+    if (panel.style.display === "none" || !panel.style.display) {
+      panel.style.display = "flex";
+    } else {
+      panel.style.display = "none";
+    }
+  });
+
   // 当 API 服务商切换时，自动填充并更新推荐模型（所有框均保持完全可编辑）
   elApiProvider.addEventListener("change", (e) => {
     const val = e.target.value;
-    if (val === "deepseek") {
-      elApiEndpoint.value = "https://api.deepseek.com";
-      elApiModel.value = "deepseek-v4-pro";
-    } else if (val === "openai") {
-      elApiEndpoint.value = "https://api.openai.com/v1";
-      elApiModel.value = "gpt-5.5";
-    } else { // custom
-      elApiEndpoint.value = "";
-      elApiModel.value = "";
-      elApiEndpoint.focus();
-    }
-    // 动态渲染对应商户的推荐模型列表
+    const defaults = PROVIDER_DEFAULTS[val] || PROVIDER_DEFAULTS.custom;
+    elApiEndpoint.value = defaults.endpoint;
+    elApiModel.value = defaults.model;
+    if (val === "custom") elApiEndpoint.focus();
     renderModelRecommendations(val);
   });
 
@@ -254,17 +289,18 @@ function registerEvents() {
   });
 
   elBtnClearConfig.addEventListener("click", () => {
+    const defaults = PROVIDER_DEFAULTS.deepseek;
     elApiProvider.value = "deepseek";
-    elApiEndpoint.value = "https://api.deepseek.com";
+    elApiEndpoint.value = defaults.endpoint;
     elApiKey.value = "";
-    elApiModel.value = "deepseek-v4-pro";
+    elApiModel.value = defaults.model;
     elApiTemp.value = 0.6;
     elValTemp.textContent = "0.6";
     apiConfig = {
       provider: "deepseek",
-      endpoint: "https://api.deepseek.com",
+      endpoint: defaults.endpoint,
       apiKey: "",
-      model: "deepseek-v4-pro",
+      model: defaults.model,
       temperature: 0.6
     };
     localStorage.removeItem("apiConfig");

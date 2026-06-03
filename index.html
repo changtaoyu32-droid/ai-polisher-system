@@ -176,12 +176,34 @@
       </div>
 
       <div class="form-group">
-        <label for="api-provider">API 服务商 (API Provider)</label>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <label for="api-provider">API 服务商 (API Provider)</label>
+          <span id="btn-provider-tip" style="cursor: pointer; color: var(--border-color-active); font-size: 0.72rem; display: flex; align-items: center; gap: 4px; user-select: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="14" height="14">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+            </svg>
+            配置说明
+          </span>
+        </div>
         <select id="api-provider" style="width: 100%; min-width: 100%;">
-          <option value="deepseek">DeepSeek (推荐)</option>
-          <option value="openai">OpenAI</option>
-          <option value="custom">自定义</option>
+          <option value="deepseek" selected>DeepSeek (性价比首选)</option>
+          <option value="openai">OpenAI (海外主力)</option>
+          <option value="qwen">通义千问 (阿里云)</option>
+          <option value="zhipu">智谱 GLM (清华系)</option>
+          <option value="kimi">月之暗面 (Kimi 长文本)</option>
+          <option value="siliconflow">硅基流动 (低延时聚合)</option>
+          <option value="custom">自定义 (其他中转)</option>
         </select>
+      </div>
+
+      <div id="provider-helper-panel" style="display: none; background: rgba(59, 130, 246, 0.04); border: 1px dashed var(--border-color-active); padding: 0.8rem; border-radius: 8px; font-size: 0.72rem; line-height: 1.5; color: var(--text-muted); margin-top: -0.75rem; margin-bottom: 0.25rem; flex-direction: column; gap: 0.25rem;">
+        💡 <b>服务商接口配置指南：</b><br/>
+        • <b>DeepSeek</b>：国内极高人气的大模型，性价比极佳，降重首选。<br/>
+        • <b>OpenAI</b>：适配 GPT-5.5 / GPT-4 系列模型，改写严密性极高。<br/>
+        • <b>通义千问 / 智谱 GLM</b>：国内大厂旗舰模型，网络极其稳定，速度飞快。<br/>
+        • <b>月之暗面 Kimi</b>：以长文本记忆著称，长句润色表现优越。<br/>
+        • <b>硅基流动</b>：国内开发者常用的聚合平台，一站式高速接入国内主流开源模型。<br/>
+        <i>* 选择商户后系统将自动填入端点及最新旗舰模型。您填入对应 API Key 点击确定即可激活。所有的输入项均支持二次手动微调。</i>
       </div>
 
       <div class="form-group">
