@@ -5,6 +5,7 @@ import { sendPromptStream } from "./api.js";
 // DOM 元素引用
 const elRoleSelect = document.getElementById("role-select");
 const elActiveRoleTags = document.getElementById("active-role-tags");
+const elIntensitySelect = document.getElementById("intensity-select");
 
 const elBtnTheme = document.getElementById("btn-theme");
 const elBtnApiConfig = document.getElementById("btn-api-config");
@@ -218,6 +219,20 @@ function registerEvents() {
     showToast(`已选定：${role ? role.name : selectedRoleId}`);
   });
 
+  // 1.2 降重强度选择切换
+  if (elIntensitySelect) {
+    elIntensitySelect.addEventListener("change", (e) => {
+      const val = e.target.value;
+      const names = { light: "轻度润色 (微调)", medium: "中度改写 (平衡)", hard: "重度重塑 (极致)" };
+      showToast(`本地降AI引擎切换为：${names[val]}`);
+      
+      const sourceText = elSourceText.value.trim();
+      if (sourceText && !isConverting) {
+        triggerLocalDemo(sourceText);
+      }
+    });
+  }
+
   // 2. 主题切换
   elBtnTheme.addEventListener("click", () => {
     currentTheme = currentTheme === "dark" ? "light" : "dark";
@@ -412,7 +427,8 @@ async function handleConvert() {
     showToast("未配置 API Key，已启用本地正则降AI模拟引擎", false);
     
     // 执行本地引擎改写
-    const localResult = localRewrite(sourceText);
+    const intensity = elIntensitySelect ? elIntensitySelect.value : "medium";
+    const localResult = localRewrite(sourceText, intensity);
     
     // 模拟流式打字输出
     simulateTyping(localResult, 
@@ -496,7 +512,8 @@ function finalizeConversion(roleId) {
 
 // 用于在初始化时做首屏演示
 function triggerLocalDemo(text) {
-  const result = localRewrite(text);
+  const intensity = elIntensitySelect ? elIntensitySelect.value : "medium";
+  const result = localRewrite(text, intensity);
   convertedResult = result;
   renderTargetText();
   elTargetCharCount.textContent = `${result.length} 字`;
@@ -537,10 +554,30 @@ function updateMetrics(sourceText, targetText, isFinal = true) {
   elCircleModify.style.strokeDashoffset = strokeDashoffset;
 
   // 3. AI 概率降低值模拟计算
+  const intensity = elIntensitySelect ? elIntensitySelect.value : "medium";
   const baseAi = 95;
-  let finalAi = baseAi - Math.floor(modifyRate * 0.95);
-  if (finalAi < 8) finalAi = 8;
-  if (tLen === 0) finalAi = 95;
+  let finalAi = baseAi;
+  
+  if (tLen === 0) {
+    finalAi = 95;
+  } else {
+    const hasApi = !!apiConfig.apiKey;
+    if (hasApi) {
+      finalAi = baseAi - Math.floor(modifyRate * 1.15);
+      if (finalAi < 3) finalAi = 3;
+    } else {
+      if (intensity === "light") {
+        finalAi = baseAi - Math.floor(modifyRate * 0.7);
+        if (finalAi < 35) finalAi = 35;
+      } else if (intensity === "medium") {
+        finalAi = baseAi - Math.floor(modifyRate * 0.95);
+        if (finalAi < 15) finalAi = 15;
+      } else { // hard
+        finalAi = baseAi - Math.floor(modifyRate * 1.1);
+        if (finalAi < 6) finalAi = 6;
+      }
+    }
+  }
 
   elValAiBefore.textContent = "95%";
   elValAiAfter.textContent = `${finalAi}%`;

@@ -55,6 +55,14 @@
             <!-- 动态生成 6 个选项 -->
           </select>
         </div>
+        <div class="intensity-selector" style="display: flex; align-items: center; gap: 0.5rem;">
+          <label for="intensity-select" style="font-weight: 600; font-size: 0.85rem; color: var(--text-muted);">降重强度:</label>
+          <select id="intensity-select" style="min-width: 145px; width: 145px;">
+            <option value="medium" selected>中度改写 (推荐)</option>
+            <option value="light">轻度润色 (微调)</option>
+            <option value="hard">重度重塑 (极致)</option>
+          </select>
+        </div>
         <!-- 动态渲染选中策略的推荐查重系统标签 -->
         <div class="role-card-tags" id="active-role-tags" style="margin-top: 0; display: flex; align-items: center; gap: 0.35rem;"></div>
       </div>
